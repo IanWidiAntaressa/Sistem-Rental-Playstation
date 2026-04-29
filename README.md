@@ -1,4 +1,3 @@
-```markdown
 # Sistem Rental PS UNDIP Tembalang
 
 <p align="center">
@@ -77,7 +76,6 @@ Mencakup manajemen meja, reservasi pelanggan, pembayaran tunai (COD), serta dash
    ```bash
    git clone https://github.com/username/sistem-rental-ps.git
    cd sistem-rental-ps
-   ```
 
 2. **Install dependensi**
 

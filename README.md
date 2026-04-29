@@ -1,3 +1,4 @@
+```markdown
 # Sistem Rental PS UNDIP Tembalang
 
 <p align="center">
@@ -76,3 +77,87 @@ Mencakup manajemen meja, reservasi pelanggan, pembayaran tunai (COD), serta dash
    ```bash
    git clone https://github.com/username/sistem-rental-ps.git
    cd sistem-rental-ps
+   ```
+
+2. **Install dependensi**
+
+   ```bash
+   npm install
+   ```
+
+3. **Buat database PostgreSQL**
+
+   - Buat database baru (misal `rental_ps`).
+   - Jalankan skrip SQL yang disediakan (jika ada) atau buat struktur tabel sesuai kebutuhan (tabel `admins`, `tables`, `customers`, `reservations`, `payments`).
+
+4. **Konfigurasi file `.env`** (lihat [Konfigurasi Environment](#konfigurasi-environment)).
+
+5. **Jalankan server**
+
+   ```bash
+   node server.js
+   ```
+
+   Server akan berjalan di `http://localhost:3000` (atau port yang ditentukan di `.env`).
+
+6. **Buat akun admin pertama**
+
+   Kunjungi `http://localhost:3000/auth/register` untuk membuat akun, lalu login di `/auth/login`.
+
+---
+
+## Konfigurasi Environment
+
+Buat file `.env` di root proyek dengan isi:
+
+```env
+PORT=9000
+DATABASE_URL=postgresql://user:password@localhost:5432/rental_ps
+SESSION_SECRET=rahasia_super_kuat
+```
+
+- `DATABASE_URL` – string koneksi PostgreSQL.
+- `SESSION_SECRET` – kunci acak untuk mengamankan session.
+
+---
+
+## Struktur Proyek
+
+```
+.
+├── controllers/
+│   ├── authController.js
+│   └── adminController.js
+├── middleware/
+│   └── auth.js
+├── routes/
+│   ├── authRoutes.js
+│   └── adminRoutes.js
+├── views/
+│   ├── dashboard.ejs
+│   ├── layout/
+│   │   ├── header.ejs
+│   │   └── footer.ejs
+│   ├── tables/
+│   │   ├── index.ejs
+│   │   └── trash.ejs
+│   └── reservations/
+│       ├── index.ejs
+│       └── trash.ejs
+├
+├── db.js
+├── server.js
+├── package.json
+├── .env.example
+└── README.md
+```
+
+---
+
+## Alur Penggunaan
+
+1. **Admin login** melalui `/auth/login`.
+2. Dapat melihat **Dashboard** untuk memantau performa rental.
+3. **Kelola Meja** – menambah, mengedit, menghapus (soft‑delete), dan mengelola Recycle Bin.
+4. **Kelola Reservasi** – menambah reservasi baru (auto‑input pelanggan), mengonfirmasi pembayaran, mengarsipkan reservasi yang batal, serta memfilter data.
+5. **Recycle Bin** – mengembalikan atau menghapus permanen data yang telah dihapus.

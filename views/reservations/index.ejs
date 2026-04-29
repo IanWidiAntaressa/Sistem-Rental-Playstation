@@ -1,0 +1,203 @@
+<%- include('../layout/header') %>
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1"><i class="fa-solid fa-calendar-check text-primary me-2"></i>Kelola Reservasi</h3>
+        <p class="text-muted mb-0">Daftar transaksi dan pemesanan meja PlayStation</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="/admin/reservations/trash" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-trash-can me-1"></i> Recycle Bin (<%= trashCount %>)
+        </a>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addReservationModal">
+            <i class="fa-solid fa-plus me-1"></i> Reservasi Baru
+        </button>
+    </div>
+</div>
+
+<!-- Filter Form -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <form method="GET">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label text-muted small fw-bold">Cari Pelanggan</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                        <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Ketik nama..." value="<%= search || '' %>">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted small fw-bold">Tanggal Main</label>
+                    <input type="date" name="date" class="form-control" value="<%= date || '' %>">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label text-muted small fw-bold">Status Pembayaran</label>
+                    <select name="payment_status" class="form-select">
+                        <option value="">Semua Status</option>
+                        <option value="Paid" <%= payment_status === 'Paid' ? 'selected' : '' %>>Lunas</option>
+                        <option value="Unpaid" <%= payment_status === 'Unpaid' ? 'selected' : '' %>>Belum Bayar</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-filter me-1"></i> Filter</button>
+                        <% if (search || date || payment_status) { %>
+                            <a href="/admin/reservations" class="btn btn-outline-secondary px-3"><i class="fa-solid fa-rotate-left"></i></a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <% if (reservations.length === 0) { %>
+            <div class="text-center py-5">
+                <i class="fa-solid fa-folder-open text-muted" style="font-size: 3rem;"></i>
+                <p class="text-muted mt-3 mb-0">Tidak ada data reservasi ditemukan.</p>
+            </div>
+        <% } else { %>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Pelanggan</th>
+                        <th>Meja</th>
+                        <th>Waktu Main</th>
+                        <th>Durasi</th>
+                        <th>Total Biaya</th>
+                        <th>Status</th>
+                        <th class="text-center" style="width: 180px;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reservations.forEach(reservation => { %>
+                    <tr>
+                        <td class="ps-4">
+                            <div class="fw-bold text-dark"><i class="fa-solid fa-user text-secondary me-2"></i><%= reservation.customer_name %></div>
+                            <div class="small text-muted ms-4"><i class="fa-solid fa-phone me-1"></i> <%= reservation.customer_phone || '-' %></div>
+                        </td>
+                        <td><span class="badge bg-primary bg-opacity-10 text-primary fs-6"><i class="fa-solid fa-tv me-1"></i> <%= reservation.table_number %></span></td>
+                        <td>
+                            <div class="small text-muted"><i class="fa-regular fa-calendar me-1"></i> <%= new Date(reservation.reservation_date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                            <div class="fw-bold text-dark"><i class="fa-regular fa-clock me-1"></i> <%= reservation.start_time %> WIB</div>
+                        </td>
+                        <td><%= reservation.duration %> Jam</td>
+                        <td class="fw-bold text-success">Rp <%= Number(reservation.amount).toLocaleString('id-ID') %></td>
+                        <td>
+                            <% if (reservation.payment_status === 'Paid') { %>
+                                <span class="badge bg-success px-2 py-1"><i class="fa-solid fa-check-double me-1"></i> Lunas</span>
+                            <% } else { %>
+                                <span class="badge bg-danger px-2 py-1"><i class="fa-solid fa-xmark me-1"></i> Belum Bayar</span>
+                            <% } %>
+                        </td>
+                        <td class="text-center">
+                            <% if (reservation.payment_status === 'Unpaid') { %>
+                                <a href="/admin/reservations/confirm/<%= reservation.id %>" class="btn btn-sm btn-success mb-1 w-100 text-start" onclick="return confirm('Konfirmasi pembayaran tunai sebesar Rp <%= Number(reservation.amount).toLocaleString(`id-ID`) %>?')">
+                                    <i class="fa-solid fa-money-bill-wave me-1"></i> Bayar
+                                </a>
+                            <% } %>
+                            <form method="POST" action="/admin/reservations/delete/<%= reservation.id %>" class="d-inline" onsubmit="confirmAction(event, 'Batalkan Reservasi?', 'Data akan dipindahkan ke Recycle Bin.', this, 'Ya, Batalkan!', '#ffc107')">
+                                <button type="submit" class="btn btn-sm btn-outline-warning w-100 text-start">
+                                    <i class="fa-solid fa-box-archive me-1"></i> Arsipkan
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
+    </div>
+</div>
+
+<!-- Add Reservation Modal -->
+<div class="modal fade" id="addReservationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-ticket me-2"></i>Form Reservasi Baru</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/admin/reservations" method="POST">
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nama Pelanggan</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-user text-muted"></i></span>
+                                <input type="text" name="customer_name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Nomor Telepon/WA</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-brands fa-whatsapp text-muted"></i></span>
+                                <input type="tel" name="phone" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Pilih Meja</label>
+                            <select name="table_id" class="form-select" required>
+                                <option value="">-- Silakan Pilih Meja Tersedia --</option>
+                                <% tables.forEach(table => { %>
+                                <option value="<%= table.id %>"><%= table.table_number %> (<%= table.status === 'In Use' ? 'Sedang Dipakai' : 'Tersedia' %>)</option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Tanggal Main</label>
+                            <input type="date" name="reservation_date" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Jam Mulai</label>
+                            <input type="time" name="start_time" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Durasi Main</label>
+                            <div class="input-group">
+                                <input type="number" name="duration" id="durationInput" class="form-control" min="1" value="1" required>
+                                <span class="input-group-text">Jam</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">Total Tagihan Pembayaran</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text text-success fw-bold">Rp</span>
+                                <input type="number" name="amount" id="amountInput" class="form-control text-success fw-bold" value="25000" required>
+                            </div>
+                            <div class="form-text text-muted">Bisa diubah secara manual jika ada diskon.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary px-4"><i class="fa-solid fa-floppy-disk me-1"></i> Simpan Reservasi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple script to auto-calculate amount based on duration (assuming Rp 25.000 / hour)
+    document.addEventListener('DOMContentLoaded', function() {
+        const durationInput = document.getElementById('durationInput');
+        const amountInput = document.getElementById('amountInput');
+        const pricePerHour = 25000;
+        
+        if(durationInput && amountInput) {
+            durationInput.addEventListener('input', function() {
+                const hours = parseInt(this.value) || 0;
+                amountInput.value = hours * pricePerHour;
+            });
+        }
+    });
+</script>
+
+<%- include('../layout/footer') %>

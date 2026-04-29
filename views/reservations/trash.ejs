@@ -1,0 +1,52 @@
+<%- include('../layout/header') %>
+<h2 class="mb-4">Recycle Bin - Reservasi</h2>
+
+<a href="/admin/reservations" class="btn btn-secondary mb-4">
+    <i class="fa-solid fa-arrow-left me-2"></i>Kembali
+</a>
+
+<% if (trashedReservations.length === 0) { %>
+<div class="alert alert-info">
+    Recycle Bin kosong.
+</div>
+<% } else { %>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Pelanggan</th>
+                    <th>Meja</th>
+                    <th>Tanggal</th>
+                    <th>Biaya</th>
+                    <th>Dibatalkan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% trashedReservations.forEach(reservation => { %>
+                <tr class="table-warning">
+                    <td><%= reservation.id %></td>
+                    <td><%= reservation.customer_name %></td>
+                    <td><%= reservation.table_number %></td>
+                    <td><%= reservation.reservation_date %> <%= reservation.start_time %></td>
+                    <td>Rp <%= Number(reservation.amount).toLocaleString('id-ID') %></td>
+                    <td><%= new Date(reservation.deleted_at).toLocaleString('id-ID') %></td>
+                    <td>
+                        <a href="/admin/reservations/restore/<%= reservation.id %>" class="btn btn-success btn-sm me-2">Kembalikan</a>
+                        <form method="POST" action="/admin/reservations/permanent-delete/<%= reservation.id %>" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus permanen?')">
+                                Hapus Permanen
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+<% } %>
+
+<%- include('../layout/footer') %>

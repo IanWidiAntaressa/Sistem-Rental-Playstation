@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Rental PS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f4f7f6; }
+        .navbar { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .card { border: none; border-radius: 12px; transition: transform 0.2s; }
+        .table-hover tbody tr:hover { background-color: #f8f9fa; }
+        .btn { border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/admin/dashboard"><i class="fa-solid fa-gamepad me-2"></i>PS Rental Pro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/admin/dashboard"><i class="fa-solid fa-house me-1"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/tables"><i class="fa-solid fa-tv me-1"></i> Kelola Meja</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/reservations"><i class="fa-solid fa-calendar-check me-1"></i> Reservasi</a></li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link text-warning fw-bold" href="/auth/logout"><i class="fa-solid fa-right-from-bracket me-1"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">

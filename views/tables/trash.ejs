@@ -1,0 +1,56 @@
+<%- include('../layout/header') %>
+<h2 class="mb-4">Recycle Bin - Meja</h2>
+
+<a href="/admin/tables" class="btn btn-secondary mb-4">
+    <i class="fa-solid fa-arrow-left me-2"></i>Kembali
+</a>
+
+<% if (trashedTables.length === 0) { %>
+<div class="alert alert-info">
+    Recycle Bin kosong. Tidak ada meja yang dihapus.
+</div>
+<% } else { %>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>No Meja</th>
+                    <th>Status</th>
+                    <th>Dihapus</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% trashedTables.forEach(table => { %>
+                <tr class="table-warning">
+                    <td><%= table.id %></td>
+                    <td><strong><%= table.table_number %></strong></td>
+                    <td>
+                        <% if (table.status === 'available') { %>
+                            <span class="badge bg-success">Tersedia</span>
+                        <% } else if (table.status === 'occupied') { %>
+                            <span class="badge bg-danger">Terpakai</span>
+                        <% } else { %>
+                            <span class="badge bg-warning">Maintenance</span>
+                        <% } %>
+                    </td>
+                    <td><%= new Date(table.deleted_at).toLocaleString('id-ID') %></td>
+                    <td>
+                        <a href="/admin/tables/restore/<%= table.id %>" class="btn btn-success btn-sm me-2">Kembalikan</a>
+                        <form method="POST" action="/admin/tables/permanent-delete/<%= table.id %>" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus permanen?')">
+                                Hapus Permanen
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+<% } %>
+
+<%- include('../layout/footer') %>

@@ -23,7 +23,6 @@ Mencakup manajemen meja, reservasi pelanggan, pembayaran tunai (COD), serta dash
 - [Konfigurasi Environment](#konfigurasi-environment)
 - [Struktur Proyek](#struktur-proyek)
 - [Alur Penggunaan](#alur-penggunaan)
-- [Lisensi](#lisensi)
 
 ---
 

@@ -95,11 +95,11 @@ Mencakup manajemen meja, reservasi pelanggan, pembayaran tunai (COD), serta dash
    node server.js
    ```
 
-   Server akan berjalan di `http://localhost:3000` (atau port yang ditentukan di `.env`).
+   Server akan berjalan di `http://localhost:9000` (atau port yang ditentukan di `.env`).
 
 6. **Buat akun admin pertama**
 
-   Kunjungi `http://localhost:3000/auth/register` untuk membuat akun, lalu login di `/auth/login`.
+   Kunjungi `http://localhost:9000/auth/register` untuk membuat akun, lalu login di `/auth/login`.
 
 ---
 

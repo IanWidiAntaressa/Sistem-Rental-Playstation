@@ -16,7 +16,7 @@ Aplikasi web untuk mengelola penyewaan konsol PlayStation di kawasan UNDIP Temba
 ## Daftar Isi
 - [Fitur Utama](#fitur-utama)
 - [Aktor & Batasan Akses](#aktor--batasan-akses)
-- [Entity Relationship Diagram (ERD) & Skema Database](#entity-relationship-diagram-erd--skema-database)
+- [Skema Database](#skema-database)
 - [DDL SQL – Struktur Tabel Lengkap](#ddl-sql--struktur-tabel-lengkap)
 - [Tech Stack](#tech-stack)
 - [Instalasi & Menjalankan Lokal](#instalasi--menjalankan-lokal)
@@ -58,69 +58,7 @@ Aplikasi web untuk mengelola penyewaan konsol PlayStation di kawasan UNDIP Temba
 
 ---
 
-## Entity Relationship Diagram (ERD) & Skema Database
-
-Sistem menggunakan enam tabel ternormalisasi dengan autentikasi terpusat di `users`. Setiap aktor memiliki profil terpisah (`admins`, `customers`) yang terhubung one-to-one ke `users`.
-
-```mermaid
-erDiagram
-    USERS {
-        int id PK
-        varchar email UK
-        varchar password
-        varchar role
-        timestamp created_at
-    }
-
-    ADMINS {
-        int id PK
-        varchar username UK
-        varchar password
-        int user_id FK UK
-        timestamp created_at
-    }
-
-    CUSTOMERS {
-        int id PK
-        varchar name
-        varchar phone
-        int user_id FK UK
-        timestamp created_at
-    }
-
-    TABLES {
-        int id PK
-        varchar table_number UK
-        varchar status
-        timestamp created_at
-        timestamp deleted_at
-    }
-
-    RESERVATIONS {
-        int id PK
-        int customer_id FK
-        int table_id FK
-        date reservation_date
-        time start_time
-        int duration
-        timestamp created_at
-        timestamp deleted_at
-    }
-
-    PAYMENTS {
-        int id PK
-        int reservation_id FK UK
-        int amount
-        varchar status
-        timestamp created_at
-    }
-
-    USERS ||--o| ADMINS : "profil"
-    USERS ||--o| CUSTOMERS : "profil"
-    CUSTOMERS ||--o{ RESERVATIONS : "melakukan"
-    TABLES ||--o{ RESERVATIONS : "dipesan"
-    RESERVATIONS ||--|| PAYMENTS : "memiliki"
-```
+## Skema Database
 
 **Kardinalitas Relasi**
 - `users` ke `admins` : **one-to-one** (unique constraint on `user_id`).

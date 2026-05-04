@@ -258,5 +258,3 @@ Setiap kali mengubah environment di Vercel, lakukan **Redeploy** agar perubahan 
 4. Buat reservasi di `/customer/reservations` – pilih meja, tanggal, jam, durasi (biaya Rp 25.000/jam), sistem menolak bentrok jadwal.
 5. Riwayat reservasi hanya menampilkan data pribadi dan status pembayaran.
 ```
-
-Simpan perubahan ini, lalu commit dan push. README kini mencerminkan seluruh struktur terbaru termasuk skema database lengkap.

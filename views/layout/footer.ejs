@@ -4,6 +4,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href !== '/auth/logout' && currentPath.startsWith(href)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
         function confirmAction(event, title, text, formElement, confirmButtonText = 'Ya, Lanjutkan!', color = '#d33') {
             event.preventDefault();
             Swal.fire({
